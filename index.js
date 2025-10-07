@@ -11,7 +11,10 @@ app.use(express.json());
 const PRIVATE_APP_ACCESS = '';
 
 app.get('/', (req, resp) => {
-
+    let cars = [{'id': 1}]
+    // Fetch all Cars custom props
+    // Fetch Cars associations 
+    return resp.render('home', {title: "Homepage", cars: cars})
 })
 
 app.get('/update-cars', (req, resp) => {
@@ -19,7 +22,7 @@ app.get('/update-cars', (req, resp) => {
 })
 
 app.post('/update-cars', (req, resp) => {
-    
+
 })
 
 /** 

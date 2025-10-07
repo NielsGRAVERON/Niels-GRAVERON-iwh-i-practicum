@@ -1,0 +1,29 @@
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        title Homepage
+        link(rel="stylesheet", href="/css/style.css")
+    body
+        H1 Cars Table 
+        a(href="/update-cars" class="btn btn-primary") Add a Car
+        table(class="table")
+            tr
+                th Name 
+                th Color 
+                th Doors 
+                th Horsepower 
+                th Production date
+                th Manufacturer
+                th Owner
+                th Action
+            each car in cars
+                tr
+                    td= "Name"
+                    td= "Color"
+                    td= "Doors" 
+                    td= "Hp" 
+                    td= "Manufacturer"
+                    td= "Production date"
+                    td= "Owner"
+                    td 
+                        a(href="/update?carId=carId") Edit
