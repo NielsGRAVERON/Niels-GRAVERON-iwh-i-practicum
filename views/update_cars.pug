@@ -1,0 +1,37 @@
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        title=title 
+        link(rel="stylesheet", href="/css/style.css")
+    body.p-4
+    .container
+        form(action="/update_cars", method="post")
+
+            H1 
+                div(class="text-center col") New Car
+
+            a(href="/", class="bi bi-arrow-left") &lt;Back
+            .mb-4
+                label(for="name").form-label Name
+                input#name.form-control(type="text", placeholder="Car's name")
+
+            .mb-3
+                label(for="manufacturer").form-label Manufacturer
+                input#manufacturer.form-control(type="text", placeholder="Car's manufacturer")
+
+            .mb-3
+                label(for="color").form-label Color
+                input#color.form-control(type="text", placeholder="Car's color")
+
+            .mb-3
+                label(for="production_date").form-label Production date
+                input#production_date.form-control(type="date")
+
+            .mb-3
+                label(for="doors").form-label Number of doors
+                select#doors.form-control
+                    option(value="1") Option 1
+                    option(value="2") Option 2
+                    option(value="3") Option 3
+
+        button.btn.btn-primary(type="submit") Envoyer

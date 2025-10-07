@@ -14,11 +14,11 @@ app.get('/', (req, resp) => {
     let cars = [{'id': 1}]
     // Fetch all Cars custom props
     // Fetch Cars associations 
-    return resp.render('home', {title: "Homepage", cars: cars})
+    return resp.render('home', {cars: cars})
 })
 
 app.get('/update-cars', (req, resp) => {
-
+    return resp.render('update_cars', {title: "New car"})
 })
 
 app.post('/update-cars', (req, resp) => {
