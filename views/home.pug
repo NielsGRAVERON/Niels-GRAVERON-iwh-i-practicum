@@ -4,26 +4,28 @@ html(lang='en')
         title Homepage
         link(rel="stylesheet", href="/css/style.css")
     body
-        H1 Cars Table 
-        a(href="/update-cars" class="btn btn-primary") Add a Car
-        table(class="table")
-            tr
-                th Name 
-                th Color 
-                th Doors 
-                th Horsepower 
-                th Production date
-                th Manufacturer
-                th Owner
-                th Action
-            each car in cars
+        .container
+            H1(class="text-center mb-4") Cars Table 
+            a(href="/update-cars" class="btn btn-primary mb-4") Add a Car
+            table(class="table")
                 tr
-                    td= "Name"
-                    td= "Color"
-                    td= "Doors" 
-                    td= "Hp" 
-                    td= "Manufacturer"
-                    td= "Production date"
-                    td= "Owner"
-                    td 
-                        a(href="/update?carId=carId") Edit
+                    th Name 
+                    th Color 
+                    th Doors 
+                    th Horsepower 
+                    th Production date
+                    th Manufacturer
+                    th Action
+                if error_message
+                    tr
+                        td(colspan="99")=error_message
+                each car in cars
+                    tr
+                        td=car.properties.name
+                        td=car.properties.color || ''
+                        td=car.properties.nombre_de_portes || '' 
+                        td=car.properties.horsepower || ''
+                        td=car.properties.production_date && car.properties.production_date.split('T')[0] || ''
+                        td=car.properties.manufacturer || ''
+                        td 
+                            a(href="/update-cars?carId=" + car.id) Edit

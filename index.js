@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const app = express();
@@ -8,13 +9,45 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // * Please DO NOT INCLUDE the private app access token in your repo. Don't do this practicum in your normal account.
-const PRIVATE_APP_ACCESS = '';
+const PRIVATE_APP_ACCESS = process.env.PRIVATE_APP_ACCESS;
+const cars_endpoint = 'https://api.hubapi.com/crm/v3/objects/2-193079179';
+const headers = {
+    Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
+    'Content-Type': 'application/json'
+}
 
-app.get('/', (req, resp) => {
-    let cars = [{'id': 1}]
+var cars = []
+
+function get_car(carId) {
+    return cars.filter((car) => car == carId)
+}
+
+
+app.get('/', async (req, resp) => {
+    let cars = []
+    let error_message = ""
     // Fetch all Cars custom props
-    // Fetch Cars associations 
-    return resp.render('home', {cars: cars})
+    const properties = ['name', 'color', 'manufacturer', 'nombre_de_portes', 'horsepower', 'production_date']
+    const params = {
+        'properties': properties.join(',')
+    }
+    try {
+        const cars_resp = await axios.get(cars_endpoint, { headers, params })
+        const results = cars_resp.data.results
+        if (results) {
+            console.log(results);
+            cars = results
+        } else {
+            error_message = cars_resp.message
+        }
+    }
+    catch (error) {
+        console.error(error)
+        error_message = error
+    }
+    finally {
+        return resp.render('home', {cars, error_message})
+    }
 })
 
 app.get('/update-cars', (req, resp) => {
