@@ -65,8 +65,62 @@ app.get('/update-cars', (req, resp) => {
     return resp.render('update_cars', {title: "New car", car})
 })
 
-app.post('/update-cars', (req, resp) => {
-
+app.post('/update-cars', async (req, resp) => {
+    
+    const params = req.body
+    const car = {
+        id: params.carId,
+        properties: params,
+    }
+    const properties = ['name', 'color', 'manufacturer', 'nombre_de_portes', 'horsepower', 'production_date']
+    const raw_values = {
+        ...params,
+        production_date: params.production_date ? new Date(params.production_date).getTime() : ''
+    }    
+    const values = {
+        'properties': Object.fromEntries(
+            Object.entries(raw_values).filter(([key]) => properties.includes(key))
+        )
+    }
+    let error_message = ''
+    console.log(values);
+    console.log(params);
+    if (params.carId) {
+        try {
+            const cars_resp = await axios.patch(cars_endpoint + "/" + params.carId, values, {headers})
+            const results = cars_resp.data.id
+            if (results) {
+                return resp.redirect('/')
+            } else {
+                console.error(cars_resp);
+                error_message = cars_resp.message
+            }
+        }
+        catch (error){
+            console.error(error);
+            error_message = error
+        }
+        finally {
+            return resp.render('update_cars', {title: car.properties.name, car, error_message})
+        }
+    } else {
+        try {
+            const cars_resp = await axios.post(cars_endpoint, values, {headers})
+            if (cars_resp.data.id) {
+                return resp.redirect('/')
+            } else {
+                console.error(cars_resp);
+                error_message = cars_resp.message
+            }
+        }
+        catch (error) {
+            console.error(error);
+            error_message = error
+        } finally {
+            return resp.render('update_cars', {title: car.properties.name, car, error_message})
+        }
+    }
+    
 })
 
 /** 

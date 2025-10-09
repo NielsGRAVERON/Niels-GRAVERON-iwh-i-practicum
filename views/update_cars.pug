@@ -5,10 +5,13 @@ html(lang='en')
         link(rel="stylesheet", href="/css/style.css")
     body.p-4
     .container
-        form(action="/update_cars", method="post")
+        form(action="/update-cars", method="post")
 
             H1 
                 div(class="text-center col")= car ? car.properties.name : "New Car"
+            
+            if error_message
+                .alert=error_message
 
             a(href="/", class="btn btn-primary") Back to homepage
             .mb-4
@@ -37,4 +40,4 @@ html(lang='en')
             if car
                 input(type="hidden", name="carId", value=car.id)
 
-        button.btn.btn-primary(type="submit") Envoyer
+            button.btn.btn-primary(type="submit") Envoyer
