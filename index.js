@@ -19,12 +19,15 @@ const headers = {
 var cars = []
 
 function get_car(carId) {
-    return cars.filter((car) => car == carId)
+    const car = cars.filter((car) => car.id == carId)
+    if (car.length > 0){
+        return car[0]
+    }
+    return false
 }
 
 
 app.get('/', async (req, resp) => {
-    let cars = []
     let error_message = ""
     // Fetch all Cars custom props
     const properties = ['name', 'color', 'manufacturer', 'nombre_de_portes', 'horsepower', 'production_date']
@@ -51,7 +54,15 @@ app.get('/', async (req, resp) => {
 })
 
 app.get('/update-cars', (req, resp) => {
-    return resp.render('update_cars', {title: "New car"})
+    const carId = req.query?.carId
+    let car = false
+    if (carId) {
+        car = get_car(carId)
+        if (!car){
+            return resp.redirect('/')
+        }
+    }
+    return resp.render('update_cars', {title: "New car", car})
 })
 
 app.post('/update-cars', (req, resp) => {

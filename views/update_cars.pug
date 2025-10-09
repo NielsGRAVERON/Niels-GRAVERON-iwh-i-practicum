@@ -8,30 +8,33 @@ html(lang='en')
         form(action="/update_cars", method="post")
 
             H1 
-                div(class="text-center col") New Car
+                div(class="text-center col")= car ? car.properties.name : "New Car"
 
             a(href="/", class="btn btn-primary") Back to homepage
             .mb-4
                 label(for="name").form-label Name
-                input#name.form-control(type="text", placeholder="Car's name")
+                input#name.form-control(name="name", type="text", placeholder="Car's name", value=car ? car.properties.name : '')
 
             .mb-3
                 label(for="manufacturer").form-label Manufacturer
-                input#manufacturer.form-control(type="text", placeholder="Car's manufacturer")
+                input#manufacturer.form-control(name="manufacturer", type="text", placeholder="Car's manufacturer", value=car ? car.properties.manufacturer : '')
 
             .mb-3
                 label(for="color").form-label Color
-                input#color.form-control(type="text", placeholder="Car's color")
+                input#color.form-control(name="color", type="text", placeholder="Car's color", value=car ? car.properties.color : '')
 
             .mb-3
                 label(for="production_date").form-label Production date
-                input#production_date.form-control(type="date")
+                input#production_date.form-control(name="production_date", type="date", value=car ? car.properties.production_date : '')
 
             .mb-3
-                label(for="doors").form-label Number of doors
-                select#doors.form-control
-                    option(value="1") Option 1
-                    option(value="2") Option 2
-                    option(value="3") Option 3
+                label(for="nombre_de_portes").form-label Number of doors
+                select#doors.form-control(name="nombre_de_portes")
+                    option(value="1 porte", selected=car ? car.properties.nombre_de_portes == '1 porte' : false) 1 porte
+                    option(value="3 portes", selected=car ? car.properties.nombre_de_portes == '3 portes': false) 3 portes
+                    option(value="4 portes", selected=car ? car.properties.nombre_de_portes == '4 portes': false) 4 portes
+                    option(value="5 portes", selected=car ? car.properties.nombre_de_portes == '5 portes': false) 5 portes
+            if car
+                input(type="hidden", name="carId", value=car.id)
 
         button.btn.btn-primary(type="submit") Envoyer
