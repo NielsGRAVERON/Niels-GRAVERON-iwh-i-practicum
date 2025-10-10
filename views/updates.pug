@@ -16,7 +16,7 @@ html(lang='en')
             a(href="/", class="btn btn-primary") Return to the homepage
             .mb-4
                 label(for="name").form-label Name
-                input#name.form-control(name="name", type="text", placeholder="Car's name", value=car ? car.properties.name : '')
+                input#name.form-control(name="name", required, type="text", placeholder="Car's name", value=car ? car.properties.name : '')
 
             .mb-3
                 label(for="manufacturer").form-label Manufacturer

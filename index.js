@@ -15,9 +15,10 @@ const headers = {
     Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
     'Content-Type': 'application/json'
 }
-
+// Car "cache"
 var cars = []
 
+// Filter cars cache to get the one with the provided id
 function get_car(carId) {
     const car = cars.filter((car) => car.id == carId)
     if (car.length > 0){
@@ -54,10 +55,12 @@ app.get('/', async (req, resp) => {
 app.get('/update-cars', (req, resp) => {
     const carId = req.query?.carId
     let car = false
+    // if we have a carId then we need to load the car detail to prefill the form
     if (carId) {
         car = get_car(carId)
         if (!car){
-            return resp.redirect('/')
+            // the carId was not found in the cache, so we redirect to the homepage to refresh it
+            resp.redirect('/')
         }
     }
     return resp.render('updates', {title: "Update Custom Object Form | Integrating With HubSpot I Practicum", car})
@@ -74,49 +77,47 @@ app.post('/update-cars', async (req, resp) => {
     const raw_values = {
         ...params,
         production_date: params.production_date ? new Date(params.production_date).getTime() : ''
-    }    
+    }
+    // Restructure form data to schema:
+    /*
+    'properties': {
+        'name': 'name',
+        'manufacturer': 'manufacture',
+        ...
+    }
+    */
     const values = {
         'properties': Object.fromEntries(
             Object.entries(raw_values).filter(([key]) => properties.includes(key))
         )
     }
     let error_message = ''
-    if (params.carId) {
-        try {
-            const cars_resp = await axios.patch(cars_endpoint + "/" + params.carId, values, {headers})
-            const results = cars_resp.data.id
-            if (results) {
-                return resp.redirect('/')
-            } else {
-                console.error(cars_resp);
-                error_message = cars_resp.message
-            }
+
+    try {
+        let cars_resp;
+        // if carId then it's an update else it's a create
+        if (params.carId) {
+            cars_resp = await axios.patch(`${cars_endpoint}/${params.carId}`, values, { headers });
+        } else {
+            cars_resp = await axios.post(cars_endpoint, values, { headers });
         }
-        catch (error){
-            console.error(error);
-            error_message = error
+
+        if (cars_resp.data.id) {
+            return resp.redirect('/');
+        } else {
+            error_message = cars_resp.message
         }
-        finally {
-            return resp.render('updates', {title: "Update Custom Object Form | Integrating With HubSpot I Practicum", car, error_message})
-        }
-    } else {
-        try {
-            const cars_resp = await axios.post(cars_endpoint, values, {headers})
-            if (cars_resp.data.id) {
-                return resp.redirect('/')
-            } else {
-                console.error(cars_resp);
-                error_message = cars_resp.message
-            }
-        }
-        catch (error) {
-            console.error(error);
-            error_message = error
-        } finally {
-            return resp.render('updates', {title: "Update Custom Object Form | Integrating With HubSpot I Practicum", car, error_message})
-        }
+    } catch (error) {
+        console.error(error);
+        error_message = error.message
     }
-    
+
+    // Error happens we rerender the updates pug with initial form data send
+    return resp.render('updates', {
+        title: "Update Custom Object Form | Integrating With HubSpot I Practicum",
+        car,
+        error_message
+    });
 })
 
 /** 
