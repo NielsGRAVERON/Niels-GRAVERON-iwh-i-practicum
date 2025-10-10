@@ -11,9 +11,9 @@ html(lang='en')
                 div(class="text-center col")= car ? car.properties.name : "New Car"
             
             if error_message
-                .alert=error_message
+                .alert.alert-danger=error_message
 
-            a(href="/", class="btn btn-primary") Back to homepage
+            a(href="/", class="btn btn-primary") Return to the homepage
             .mb-4
                 label(for="name").form-label Name
                 input#name.form-control(name="name", type="text", placeholder="Car's name", value=car ? car.properties.name : '')

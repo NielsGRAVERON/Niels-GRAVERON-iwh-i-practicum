@@ -26,7 +26,6 @@ function get_car(carId) {
     return false
 }
 
-
 app.get('/', async (req, resp) => {
     let error_message = ""
     // Fetch all Cars custom props
@@ -38,7 +37,6 @@ app.get('/', async (req, resp) => {
         const cars_resp = await axios.get(cars_endpoint, { headers, params })
         const results = cars_resp.data.results
         if (results) {
-            console.log(results);
             cars = results
         } else {
             error_message = cars_resp.message
@@ -49,7 +47,7 @@ app.get('/', async (req, resp) => {
         error_message = error
     }
     finally {
-        return resp.render('home', {cars, error_message})
+        return resp.render('homepage', {cars, error_message})
     }
 })
 
@@ -62,7 +60,7 @@ app.get('/update-cars', (req, resp) => {
             return resp.redirect('/')
         }
     }
-    return resp.render('update_cars', {title: "New car", car})
+    return resp.render('updates', {title: "Update Custom Object Form | Integrating With HubSpot I Practicum", car})
 })
 
 app.post('/update-cars', async (req, resp) => {
@@ -83,8 +81,6 @@ app.post('/update-cars', async (req, resp) => {
         )
     }
     let error_message = ''
-    console.log(values);
-    console.log(params);
     if (params.carId) {
         try {
             const cars_resp = await axios.patch(cars_endpoint + "/" + params.carId, values, {headers})
@@ -101,7 +97,7 @@ app.post('/update-cars', async (req, resp) => {
             error_message = error
         }
         finally {
-            return resp.render('update_cars', {title: car.properties.name, car, error_message})
+            return resp.render('updates', {title: "Update Custom Object Form | Integrating With HubSpot I Practicum", car, error_message})
         }
     } else {
         try {
@@ -117,7 +113,7 @@ app.post('/update-cars', async (req, resp) => {
             console.error(error);
             error_message = error
         } finally {
-            return resp.render('update_cars', {title: car.properties.name, car, error_message})
+            return resp.render('updates', {title: "Update Custom Object Form | Integrating With HubSpot I Practicum", car, error_message})
         }
     }
     
